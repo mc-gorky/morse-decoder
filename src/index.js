@@ -44,47 +44,23 @@ const SYMBOL_CODES = {
 
 const ENCODE_LETTER_LENGTH = 10;
 
-let CODES_TABLE = {};
-
-
-Object.keys(MORSE_TABLE).forEach((key) => {
+let CODES_TABLE = Object.keys(MORSE_TABLE).reduce((codesTable, key) => {
   const splitKey = key.split('');
-  let encodeLetter = '';
 
-  splitKey.forEach((symbol) => {
-    const encodeSymbol = SYMBOL_CODES[symbol];
+  let encodeLetter = splitKey.reduce((result, symbol) => {
+    return result + SYMBOL_CODES[symbol];
+  }, '');
 
-    encodeLetter = encodeLetter + encodeSymbol;
-  });
-
-  splitKey.reduce(() => {}, '')
-
-  while (encodeLetter.length < 10) {
+  while (encodeLetter.length < ENCODE_LETTER_LENGTH) {
     encodeLetter = '0' + encodeLetter;
   }
 
-  CODES_TABLE[encodeLetter] = MORSE_TABLE[key];
+  codesTable[encodeLetter] = MORSE_TABLE[key];
+
+  return codesTable;
+}, {
+  '**********': ' ',
 });
-
-
-// Object.keys(MORSE_TABLE).forEach((key) => {
-//   const splitKey = key.split('');
-//   let encodeLetter = '';
-
-//   splitKey.forEach((symbol) => {
-//     const encodeSymbol = SYMBOL_CODES[symbol];
-
-//     encodeLetter = encodeLetter + encodeSymbol;
-//   });
-
-//   while (encodeLetter.length < 10) {
-//     encodeLetter = '0' + encodeLetter;
-//   }
-
-//   CODES_TABLE[encodeLetter] = MORSE_TABLE[key];
-// });
-
-CODES_TABLE['**********'] = ' ';
 
 function decode(expr) {
   let result = '';
